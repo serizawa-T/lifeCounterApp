@@ -45,6 +45,40 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     setState(() {});
   }
 
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('本当に削除しますか？'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('すべて削除されますが本当によろしいですか?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('はい'),
+              onPressed: () {
+                lifeEventBox?.removeAll();
+                fetchLifeEvents();
+              },
+            ),
+            TextButton(
+              child: const Text('いいえ'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,8 +93,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
         actions: [
           IconButton(
             onPressed: () {
-              lifeEventBox?.removeAll();
-              fetchLifeEvents();
+              _showMyDialog();
             },
             icon: const Icon(Icons.delete),
           ),
